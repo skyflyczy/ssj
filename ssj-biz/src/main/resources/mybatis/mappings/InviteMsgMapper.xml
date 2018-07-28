@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.biz.dao.InviteMsgDao">
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO invite_msg (
+        	id ,
+        	InviteTheme ,
+        	InviteContent ,
+        	InviteTime ,
+        	CreateTime 
+        ) VALUES (
+        	#{id} ,
+        	#{inviteTheme} ,
+        	#{inviteContent} ,
+        	#{inviteTime} ,
+        	now()  
+        )
+    	<selectKey resultType="java.lang.Integer" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+	</insert>
+    
+	<update id="update">
+        UPDATE invite_msg SET
+	        InviteTheme = #{inviteTheme} ,
+	        InviteContent = #{inviteContent} ,
+	        InviteTime = #{inviteTime} 
+        WHERE 
+	        id = #{id} 
+	</update>
+
+    <delete id="delete" parameterType="java.util.Map">
+        DELETE FROM invite_msg WHERE
+        id = #{id} 
+    </delete>
+    
+    <select id="getById" parameterType="java.util.Map" resultType="com.ssj.common.vo.InviteMsgVo">
+    	SELECT *
+	    FROM invite_msg 
+        WHERE 
+	        id = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+	       <if test="@Ognl@isNotEmpty(id)">
+				AND id = #{id}
+			</if>
+	       <if test="@Ognl@isNotEmpty(inviteTheme)">
+				AND InviteTheme = #{inviteTheme}
+			</if>
+	       <if test="@Ognl@isNotEmpty(inviteContent)">
+				AND InviteContent = #{inviteContent}
+			</if>
+	       <if test="@Ognl@isNotEmpty(inviteTimeBegin)">
+				AND InviteTime >= #{inviteTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(inviteTimeEnd)">
+				AND InviteTime &lt;= #{inviteTimeEnd}
+		   </if>
+	       <if test="@Ognl@isNotEmpty(createTimeBegin)">
+				AND CreateTime >= #{createTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(createTimeEnd)">
+				AND CreateTime &lt;= #{createTimeEnd}
+		   </if>
+		</where>
+	</sql>
+
+    <select id="findByMap" parameterType="java.util.Map" resultType="com.ssj.common.vo.InviteMsgVo">
+    	SELECT *
+	    FROM invite_msg 
+		<include refid="where"/>
+		
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+</mapper>
+

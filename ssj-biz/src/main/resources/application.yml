@@ -1,0 +1,54 @@
+server:
+  port: 8202
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka.ssj:9100/eureka/
+      healthcheck:
+        enabled: true
+  instance:
+    prefer-ip-address: true
+    
+spring:
+  application:
+    name: sf-biz
+  datasource:
+    platform: mysql
+    driverClassName: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: 'jdbc:mysql://127.0.0.1:3306/sf?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull'
+    username: 'root'
+    password: 'rCoHoAtI@123'
+    filters: stat
+    initialSize: 10
+    minIdle: 10
+    maxActive: 50
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 5000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    validationQueryTimeout: 60
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: false
+      
+mybatis: 
+  mapperLocations:
+  - classpath:mybatis/mappings/**/*.xml
+  typeAliasesPackage: com.ssf.biz
+  configLocation: classpath:/mybatis/mybatis-config.xml
+
+logging:
+  level:
+    root: info
+    org.hibernate: info
+    org.springframework.amqp: info
+    # 显示 sql 语句的参数
+    org.hibernate.type.descriptor.sql.BasicBinder: info
+    org.hibernate.type.descriptor.sql.BasicExtractor: info
+    # 代码日志级别
+    com.telecwin: debug
+    org.activiti: error
+  file: /data/logs/ssj/biz.log

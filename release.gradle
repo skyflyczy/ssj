@@ -1,0 +1,17 @@
+release {
+    tagTemplate = '$name-$version'
+    git {
+        requireBranch = 'master'
+    }
+}
+
+task(startmessage) << {
+    println 'starting build'
+}
+
+task(printversion) << {
+    println project.version
+}
+
+beforeReleaseBuild.dependsOn startmessage
+afterReleaseBuild.dependsOn printversion

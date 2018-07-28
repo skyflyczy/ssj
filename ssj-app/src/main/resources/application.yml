@@ -1,0 +1,30 @@
+server:
+  port: 8201
+
+spring:
+  application:
+    name: ssj-app
+    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka.ssj:9100/eureka/
+      healthcheck:
+        enabled: true
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    root: info
+    org.hibernate: info
+    # 应用日志级别
+    com.sf.app: debug
+  file: /data/logs/ssj/app.log
+  
+          
+#hystrix调用方法的超时时间，默认是1000毫秒
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 60000
+ribbon:
+  ConnectTimeout: 10000
+  ReadTimeout: 60000

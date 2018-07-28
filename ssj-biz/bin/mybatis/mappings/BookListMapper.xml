@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.biz.dao.BookListDao">
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO book_list (
+        	Id ,
+        	ReceiveUserId ,
+        	ReceiveUserName ,
+        	SendUserId ,
+        	SendUserName ,
+        	BookDate ,
+        	BookMoney ,
+        	BookGift ,
+        	BookCause ,
+        	BookGreetings ,
+        	CreateTime ,
+        	UpdateTime 
+        ) VALUES (
+        	#{id} ,
+        	#{receiveUserId} ,
+        	#{receiveUserName} ,
+        	#{sendUserId} ,
+        	#{sendUserName} ,
+        	#{bookDate} ,
+        	#{bookMoney} ,
+        	#{bookGift} ,
+        	#{bookCause} ,
+        	#{bookGreetings} ,
+        	now() ,
+        	now()  
+        )
+    	<selectKey resultType="java.lang.Integer" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+	</insert>
+    
+	<update id="update">
+        UPDATE book_list SET
+	        BookType = #{bookType} ,
+	        ReceiveUserId = #{receiveUserId},
+        	ReceiveUserName = #{receiveUserName},
+        	SendUserId = #{sendUserId},
+        	SendUserName = #{sendUserName},
+	        BookDate = #{bookDate} ,
+	        BookMoney = #{bookMoney} ,
+	        BookGift = #{bookGift} ,
+	        BookCause = #{bookCause} ,
+	        BookGreetings = #{bookGreetings} ,
+	        UpdateTime = now() 
+        WHERE 
+	        Id = #{id} 
+	</update>
+    
+    <select id="getById" parameterType="int" resultType="com.ssj.common.vo.BookListVo">
+    	SELECT *
+	    FROM book_list 
+        WHERE 
+	        Id = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+	       <if test="@Ognl@isNotEmpty(id)">
+				AND Id = #{id}
+			</if>
+	       <if test="@Ognl@isNotEmpty(bookDateBegin)">
+				AND BookDate >= #{bookDateBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(bookDateEnd)">
+				AND BookDate &lt;= #{bookDateEnd}
+		   </if>
+	       <if test="@Ognl@isNotEmpty(bookMoney)">
+				AND BookMoney = #{bookMoney}
+			</if>
+	       <if test="@Ognl@isNotEmpty(bookGift)">
+				AND BookGift = #{bookGift}
+			</if>
+	       <if test="@Ognl@isNotEmpty(bookCause)">
+				AND BookCause = #{bookCause}
+			</if>
+	       <if test="@Ognl@isNotEmpty(createTimeBegin)">
+				AND CreateTime >= #{createTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(createTimeEnd)">
+				AND CreateTime &lt;= #{createTimeEnd}
+		   </if>
+	       <if test="@Ognl@isNotEmpty(updateTimeBegin)">
+				AND UpdateTime >= #{updateTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(updateTimeEnd)">
+				AND UpdateTime &lt;= #{updateTimeEnd}
+		   </if>
+		</where>
+	</sql>
+
+    <select id="findByMap" parameterType="java.util.Map" resultType="com.ssj.common.vo.BookListVo">
+    	SELECT *
+	    FROM book_list 
+		<include refid="where"/>
+		
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+</mapper>
+

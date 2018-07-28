@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssj.biz.dao.NoteBookDao">
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO note_book (
+        	id ,
+        	NoteTitle ,
+        	NoteRole ,
+        	NoteType ,
+        	NoteRepeat ,
+        	NoteRemind ,
+        	NotRemind ,
+        	NoteDate ,
+        	NoteLevel ,
+        	NoteAddress ,
+        	CreateTime ,
+        	UpdateTime 
+        ) VALUES (
+        	#{id} ,
+        	#{noteTitle} ,
+        	#{noteRole} ,
+        	#{noteType} ,
+        	#{noteRepeat} ,
+        	#{noteRemind} ,
+        	#{notRemind} ,
+        	#{noteDate} ,
+        	#{noteLevel} ,
+        	#{noteAddress} ,
+        	now() ,
+        	now() 
+        )
+    	<selectKey resultType="java.lang.Integer" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+	</insert>
+    
+	<update id="update">
+        UPDATE note_book SET
+	        NoteTitle = #{noteTitle} ,
+	        NoteRole = #{noteRole} ,
+	        NoteType = #{noteType} ,
+	        NoteRepeat = #{noteRepeat} ,
+	        NoteRemind = #{noteRemind} ,
+	        NotRemind = #{notRemind} ,
+	        NoteDate = #{noteDate} ,
+	        NoteLevel = #{noteLevel} ,
+	        NoteAddress = #{noteAddress} ,
+	        UpdateTime = now()  
+        WHERE 
+	        id = #{id} 
+	</update>
+
+    <delete id="delete" parameterType="java.util.Map">
+        DELETE FROM note_book WHERE
+        id = #{id} 
+    </delete>
+    
+    <select id="getById" parameterType="java.util.Map" resultType="com.ssj.common.vo.NoteBookVo">
+    	SELECT *
+	    FROM note_book 
+        WHERE 
+	        id = #{id} 
+	</select>
+	
+	<sql id="where">
+		<where>	      				
+	       <if test="@Ognl@isNotEmpty(id)">
+				AND id = #{id}
+			</if>
+	       <if test="@Ognl@isNotEmpty(noteTitle)">
+				AND NoteTitle = #{noteTitle}
+			</if>
+	       <if test="@Ognl@isNotEmpty(noteRole)">
+				AND NoteRole = #{noteRole}
+			</if>
+	       <if test="@Ognl@isNotEmpty(noteType)">
+				AND NoteType = #{noteType}
+			</if>
+	       <if test="@Ognl@isNotEmpty(noteRepeat)">
+				AND NoteRepeat = #{noteRepeat}
+			</if>
+	       <if test="@Ognl@isNotEmpty(noteRemind)">
+				AND NoteRemind = #{noteRemind}
+			</if>
+	       <if test="@Ognl@isNotEmpty(notRemind)">
+				AND NotRemind = #{notRemind}
+			</if>
+	       <if test="@Ognl@isNotEmpty(noteDateBegin)">
+				AND NoteDate >= #{noteDateBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(noteDateEnd)">
+				AND NoteDate &lt;= #{noteDateEnd}
+		   </if>
+	       <if test="@Ognl@isNotEmpty(noteLevel)">
+				AND NoteLevel = #{noteLevel}
+			</if>
+	       <if test="@Ognl@isNotEmpty(noteAddress)">
+				AND NoteAddress = #{noteAddress}
+			</if>
+	       <if test="@Ognl@isNotEmpty(createTimeBegin)">
+				AND CreateTime >= #{createTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(createTimeEnd)">
+				AND CreateTime &lt;= #{createTimeEnd}
+		   </if>
+	       <if test="@Ognl@isNotEmpty(updateTimeBegin)">
+				AND UpdateTime >= #{updateTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(updateTimeEnd)">
+				AND UpdateTime &lt;= #{updateTimeEnd}
+		   </if>
+		</where>
+	</sql>
+
+    <select id="findByMap" parameterType="java.util.Map" resultType="com.ssj.common.vo.NoteBookVo">
+    	SELECT *
+	    FROM note_book 
+		<include refid="where"/>
+		
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+</mapper>
+

@@ -1,0 +1,13 @@
+ext {
+    deployType = "jar"
+    deployDir = new File(project.buildDir, "/deploy")
+}
+
+// 准备部署需要的目录结构
+task prepareDeploy(dependsOn: "assemble") {
+}
+
+build {
+    dependsOn "prepareDeploy"
+}
+

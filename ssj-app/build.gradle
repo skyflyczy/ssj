@@ -1,0 +1,56 @@
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = 1.8
+targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+buildscript {
+    ext {
+        springBootVersion = '1.5.10.RELEASE'
+    }
+
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Edgware.SR2'
+    }
+    resolutionStrategy {
+        cacheChangingModulesFor 0, 'seconds'
+    }
+
+}
+
+dependencies {
+	compile project (':ssj-common')
+	compile project (':ssj-bizclient')
+	//compile fileTree(dir:'libs',include:['*.jar'])
+	
+	compile ('org.springframework.boot:spring-boot-devtools')
+	runtime ('org.springframework.boot:spring-boot-actuator')
+	compile ('org.springframework.boot:spring-boot-starter-actuator')
+	compile ('org.springframework.boot:spring-boot-starter-web')
+	compile ('org.springframework.cloud:spring-cloud-starter-eureka')
+	compile ('org.springframework.cloud:spring-cloud-starter-feign')
+	
+	
+	compile 'org.apache.commons:commons-lang3:3.7'
+	
+	testCompile ('org.springframework.boot:spring-boot-starter-test')
+}
